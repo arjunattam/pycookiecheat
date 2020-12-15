@@ -68,7 +68,11 @@ def chrome_decrypt(
     decryptor = cipher.decryptor()
     decrypted = decryptor.update(encrypted_value) + decryptor.finalize()
 
-    return clean(decrypted)
+    try:
+        return clean(decrypted)
+    except UnicodeDecodeError as e:
+        print("Unable to decode as UTF8: {}".format(repr(decrypted)))
+        raise
 
 
 def get_osx_config(browser: str) -> dict:
