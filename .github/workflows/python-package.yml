@@ -28,6 +28,6 @@ jobs:
     - name: Install tox
       run: python -m pip install tox
     - name: Run tox
-      run: xvfb-run --auto-servernum tox -e py
+      run: xvfb-run tox -e py
     - name: Lint
       run: tox -e lint
