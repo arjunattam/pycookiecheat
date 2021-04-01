@@ -43,8 +43,9 @@ def ci_setup() -> None:
     cookies_home = str(Path(cookies_home).expanduser())
 
     options = webdriver.chrome.options.Options()
-    # options.add_argument("headless")
-    # options.add_argument("no-sandbox")
+    options.add_argument("headless")
+    options.add_argument("no-sandbox")
+    options.add_argument("disable-dev-shm-usage")
     options.add_argument("user-data-dir={}".format(cookies_home))
     options.add_argument("profile-directory=Default")
     options.add_experimental_option("excludeSwitches", ["use-mock-keychain"])
