@@ -43,7 +43,7 @@ def ci_setup() -> None:
     cookies_home = str(Path(cookies_home).expanduser())
 
     options = webdriver.chrome.options.Options()
-    options.add_argument("headless")
+    # options.add_argument("headless")
     options.add_argument("no-sandbox")
     options.add_argument("disable-dev-shm-usage")
     options.add_argument("user-data-dir={}".format(cookies_home))
@@ -88,15 +88,13 @@ def test_no_cookies(ci_setup: t.Callable) -> None:
 def test_fake_cookie(ci_setup: t.Callable) -> None:
     """Tests a fake cookie from the website below.
 
-    For this to pass, you'll
-    have to visit the url and put in "TestCookie" and "Just_a_test!" to set
-    a temporary cookie with the appropriate values.
-
+    For this to pass, you'll have to visit the url and put in "TestCookie" and
+    "Just_a_test!" to set a temporary cookie with the appropriate values.
     """
     cookies = chrome_cookies(
         "https://n8henrie.com",
     )
-    assert cookies["pycookiecheatTestCookie"] == "Just_a_test!"
+    assert cookies.get("pycookiecheatTestCookie") == "Just_a_test!"
 
 
 def test_raises_on_wrong_browser() -> None:
