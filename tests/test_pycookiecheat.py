@@ -9,13 +9,13 @@ from urllib.error import URLError
 from uuid import uuid4
 
 import pytest
-
 from playwright.sync_api import sync_playwright
+
 from pycookiecheat import chrome_cookies
 
 
 @pytest.fixture(scope="module")
-def ci_setup() -> None:
+def ci_setup() -> t.Generator:
     """Set up Chrome's cookies file and directory.
 
     Unfortunately, at least on MacOS 11, I haven't found a way to do this using
