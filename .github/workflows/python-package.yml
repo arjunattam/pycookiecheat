@@ -12,9 +12,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
-    services:
-      selenium:
-        image: selenium/sdandalone-chrome
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
@@ -25,11 +22,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install xvfb
-      run: apt install xvfb
     - name: Install tox
       run: python -m pip install tox
     - name: Run tox
-      run: xvfb-run tox -e py
+      run: xvfb-run python -m tox -e py
     - name: Lint
-      run: tox -e lint
+      run: python -m tox -e lint
