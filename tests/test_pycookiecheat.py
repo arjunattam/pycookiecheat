@@ -1,5 +1,6 @@
 """test_pycookiecheat.py :: Tests for pycookiecheat module."""
 
+import sys
 import time
 import typing as t
 from pathlib import Path
@@ -92,6 +93,8 @@ def test_fake_cookie(ci_setup: t.Callable) -> None:
     For this to pass, you'll have to visit the url and put in "TestCookie" and
     "Just_a_test!" to set a temporary cookie with the appropriate values.
     """
+    if sys.version_info < (3, 7):
+        return
     cookies = chrome_cookies(
         "https://n8henrie.com",
         cookie_file=ci_setup,
