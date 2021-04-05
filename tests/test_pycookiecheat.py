@@ -79,14 +79,14 @@ def test_raises_without_scheme() -> None:
         chrome_cookies("n8henrie.com")
 
 
-def test_no_cookies(ci_setup: t.Callable) -> None:
+def test_no_cookies(ci_setup: str) -> None:
     """Ensure that no cookies are returned for a fake url."""
     never_been_here = "http://{0}.com".format(uuid4())
     empty_dict = chrome_cookies(never_been_here)
     assert empty_dict == dict()
 
 
-def test_fake_cookie(ci_setup: t.Callable) -> None:
+def test_fake_cookie(ci_setup: str) -> None:
     """Tests a fake cookie from the website below.
 
     For this to pass, you'll have to visit the url and put in "TestCookie" and
