@@ -19,7 +19,6 @@ import urllib.parse
 from typing import Iterator, Union
 
 import keyring
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.ciphers import Cipher
 from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from cryptography.hazmat.primitives.ciphers.modes import CBC
@@ -63,9 +62,10 @@ def chrome_decrypt(
     encrypted_value = encrypted_value[3:]
 
     cipher = Cipher(
-        algorithm=AES(key), mode=CBC(init_vector), backend=default_backend()
+        algorithm=AES(key),
+        mode=CBC(init_vector),
     )
-    decryptor = cipher.decryptor()
+    decryptor = cipher.decryptor()  # type: ignore
     decrypted = decryptor.update(encrypted_value) + decryptor.finalize()
 
     return clean(decrypted)
@@ -83,7 +83,7 @@ def get_osx_config(browser: str) -> dict:
     # Verify supported browser, fail early otherwise
     if browser.lower() == "chrome":
         cookie_file = (
-            "~/Library/Application Support/Google/Chrome/Default/" "Cookies"
+            "~/Library/Application Support/Google/Chrome/Default/Cookies"
         )
     elif browser.lower() == "chromium":
         cookie_file = "~/Library/Application Support/Chromium/Default/Cookies"
@@ -218,7 +218,6 @@ def chrome_cookies(
 
     kdf = PBKDF2HMAC(
         algorithm=SHA1(),
-        backend=default_backend(),
         iterations=config["iterations"],
         length=config["length"],
         salt=config["salt"],
@@ -232,7 +231,7 @@ def chrome_cookies(
         raise urllib.error.URLError("You must include a scheme with your URL.")
 
     try:
-        conn = sqlite3.connect(cookie_file)
+        conn = sqlite3.connect("file:{}?mode=ro".format(cookie_file), uri=True)
     except sqlite3.OperationalError:
         print("Unable to connect to cookie_file at: {}\n".format(cookie_file))
         raise
@@ -273,7 +272,7 @@ def chrome_cookies(
         ) in conn.execute(sql, (host_key,)):
             # if there is a not encrypted value or if the encrypted value
             # doesn't start with the 'v1[01]' prefix, return v
-            if val or (enc_val[:3] not in (b"v10", b"v11")):
+            if val or (enc_val[:3] not in {b"v10", b"v11"}):
                 pass
             else:
                 val = chrome_decrypt(
