@@ -26,6 +26,6 @@ jobs:
     - name: Install tox
       run: python -m pip install tox
     - name: Run tox
-      run: xvfb-run --auto-servernum python -m tox -e py
+      run: xvfb-run --auto-servernum -- python -m tox -e py
     - name: Lint
       run: python -m tox -e lint
